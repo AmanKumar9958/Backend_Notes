@@ -1,0 +1,7 @@
+History
+    -NodeJS is an runtime environment built to create and run servers
+    -It is built using Chrome's V8 engine
+
+Creating Project
+    -type npm init -y
+    -this will create a package.json file which is the "lekha jokha of our Project"
