@@ -1,0 +1,10 @@
+NPM -> Node Package Manager, it has all the packages related to the node, react, etc.
+The things which come pre-installed with Node JS is called modules.
+The things which we download by using NPM is called package.
+
+Command to install any package: npm i package_name
+Command to uninstall any package: npm i package_name
+
+Dependencies: packages
+DevDependency: Packages which will be used only in development time not in deployment time.
+Command to make it DevDependency: npm i package_name --save-dev
