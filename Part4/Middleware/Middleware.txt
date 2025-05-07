@@ -1,0 +1,11 @@
+Middleware is something which serves in the between before going to any route.
+Ex-
+    If we want some data from facebook (user's DP), so before going to that route it we want to print something like (hello)
+    then for doing this we will add Middleware
+
+Creating Middleware:
+    1. Middleware must be added before the routes (/, /about, etc)
+    2. To use Middleware we ave to use app.use() and in this we have a function which accepts 3 parameters: req, res and next
+
+Error Handling:
+    1. For handling errors we create a middleware in last of all the routes and it accepts 4 parameters: err, req, res and next

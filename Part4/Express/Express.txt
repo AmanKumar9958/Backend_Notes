@@ -1,0 +1,12 @@
+Framework: It gives us flow to done our work, it means it will gives us steps and we must have to follow all the steps.
+Library: It provide us tools to complete our work.
+
+Express JS is a framework.
+It is a NPM package.
+It manages everything from receiving the request and giving the response, connecting to databases, etc.
+To use Express in our project: 
+    To install: 'npm i express'
+    To run: 'node fileName'
+
+To see changes we have to manually restart the server, we makes create frustration, to solve this we can use nodemon, here are te steps:
+    Install: 'npm i nodemon -g' (g for global installation)
