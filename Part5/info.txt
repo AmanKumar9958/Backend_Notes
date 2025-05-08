@@ -1,0 +1,24 @@
+In this lecture we will learn about form handling, sessions and cookies
+
+Session:
+    A session is data stored on the server-side.
+    It is used to remember the user while they navigate through different pages of a website.
+    A unique Session ID is stored in the browser as a cookie, which connects the user to the session data on the server.
+
+Cookie:
+    A cookie is small data stored on the user's browser (client-side).
+    It is created by the server and saved in the user's browser to remember things like login info or preferences.
+
+Whenever we visit on any website (Instagram) and we ask something like show me this image, then that website aks who are you? Then we have to do login
+on that particular website then it gives us the image or whatever we asked from it. But after doing login server forget we are you. And when we do any
+another request to the server then it again ask for doing login which creates frustration.
+
+For solving this issue we have something called cookies, cookies is like a unique string, which get stored in the frontend (browser) and also in our backend
+and whenever we request something on the backend then our unique string (Cookie) also get attached with that request and we don't need to do login process
+again and again.
+
+And the connection/process between frontend to backend to stay connected is called Session.
+
+In short:
+    Cookies are like ID cards you carry with you.
+    Sessions are like files stored in the office (server) that get opened when you show your ID.
