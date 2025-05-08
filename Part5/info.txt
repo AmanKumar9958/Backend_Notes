@@ -22,3 +22,9 @@ And the connection/process between frontend to backend to stay connected is call
 In short:
     Cookies are like ID cards you carry with you.
     Sessions are like files stored in the office (server) that get opened when you show your ID.
+
+
+Whenever we send data from frontend to backend then it doesn't go directly in plain text and it becomes unreadable and then we have to make readable again.
+To make our data readable use have to use this:
+    app.use(express.json())
+    app.use(express.urlencoded({extended: true}));
