@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Home</title>
+</head>
+<body>
+    <div class="w-full min-h-screen bg-gray-800 text-white flex items-center justify-center flex-col gap-5">
+        <h1 class="text-5xl font-bold">This is Home Page 🏠🏡</h1>
+        <h1>Using EJS we can also do the dynamic printing:</h1>
+        <p>
+            2+2: <%= 2+ 2 %>
+        </p>
+        <div class="flex items-center justify-center gap-5 flex-col">
+            <div class="flex items-center justify-center gap-5">
+                <button id="inc-btn" class="hover:cursor-pointer hover:scale-105 bg-blue-400 text-black p-4 rounded-xl font-bold text-xl">
+                    + ve
+                </button>
+                <button id="dec-btn" class="hover:cursor-pointer hover:scale-105 bg-blue-400 text-black p-4 rounded-xl font-bold text-xl">
+                    - ve
+                </button>
+            </div>
+            <p id="counter">Counter: </p>
+        </div>
+    </div>
+    <script src="/javascript/myScripts.js"></script>
+</body>
+</html>

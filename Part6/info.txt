@@ -1,0 +1,32 @@
+In this lecture we will learn EJS, Dynamic Routing and will setup our Project
+
+Project Setup ✔:
+    To setup any project run: "npm init -y"
+
+Dynamic Routing:
+    Dynamic Routing
+    How to get data coming from frontend at backend route
+
+Setting up parsers for form ✔:
+    About:
+        It helps to make the data readable which we are getting from the frontend.
+    Steps to use:
+        using express.json()
+        using express.urlencoded({extended: true})
+
+Setting up EJS for ejs pages ✔:
+    About:
+        ejs is our frontend, we create frontend using ejs, it is similar like HTML, it helps to write Dynamic stuffs
+    Steps to use:
+        1. Install the ejs using "npm i ejs"
+        2. Setup ejs as a view engine
+        3. Create a "views" name folder insider which you can create any page ending with ".ejs" only.
+        4. Then instead of using "send" we will now use "render" and then type the file name
+
+Setting up public static files ✔:
+    About:
+        It helps to use files like images, js and static files like js, css 
+    Steps to use:
+        1. app.use(express.static(path.join(_dirname, 'public')))
+        2. Then create a public folder in root, then you can create folder like images, videos, css, etc.
+        3. For using files like css file form public folder just use as normal like we are doing in HTML
