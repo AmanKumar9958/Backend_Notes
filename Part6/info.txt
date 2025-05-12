@@ -3,7 +3,7 @@ In this lecture we will learn EJS, Dynamic Routing and will setup our Project
 Project Setup ✔:
     To setup any project run: "npm init -y"
 
-Dynamic Routing:
+Dynamic Routing ✔:
     Dynamic Routing
     How to get data coming from frontend at backend route
     About:
