@@ -6,6 +6,15 @@ Project Setup ✔:
 Dynamic Routing:
     Dynamic Routing
     How to get data coming from frontend at backend route
+    About:
+        Sometimes some part of route remains same and only specific part changes, while navigating to the pages.
+        Eg: /profile/Aman, /profile/Harsh, /profile/Rohan, etc.
+        /profile remain change and only the username get changing.
+    Steps:
+        1. Go to that url on which you want to go. (/profile/Aman)
+        2. Check which part is dynamic in this (Aman) is dynamic.
+        3. In the route before the name just add the -> : (/profile/:username)
+        4. This username will act like the variable, which can be changed according the requirement.
 
 Setting up parsers for form ✔:
     About:
