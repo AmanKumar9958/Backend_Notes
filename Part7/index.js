@@ -10,6 +10,8 @@ app.use(express.urlencoded({extended: true}));
 
 app.use(express.static(path.join(__dirname, "public")));
 
+
+// Route for homepage
 app.get('/', (req, res) => {
     fs.readdir('./files', function(err, files){
         if (err) return res.send("Error reading files");
@@ -22,10 +24,31 @@ app.get('/', (req, res) => {
     })
 })
 
+// This will take the data and create the file..
 app.post('/create', (req, res) => {
     fs.writeFile(`./files/${req.body.title.split(' ').join('')}`, req.body.description, function(err){  // path, fileName(title), body, callback for error
         res.redirect('/');
     })
 })
+
+// This will show open the file..
+app.get("/file/:filename", function(req, res){
+    fs.readFile(`./files/${req.params.filename}`, "utf-8", function(err, fileData){
+        res.render("show", {filename: req.params.filename, fileData: fileData})
+    })
+})
+
+// This will delete the file..
+app.get("/deleteFile/:filename", function(req, res){
+    fs.unlink(`./files/${req.params.filename}`, function(err){
+        if(err){
+            console.log("Failed to delete the file: ", err);
+            return res.send("Error deleting file");
+        }
+        res.redirect("/");
+    })
+})
+
+// This will save the file like file..
 
 app.listen(3000);
