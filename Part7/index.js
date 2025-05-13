@@ -24,21 +24,21 @@ app.get('/', (req, res) => {
     })
 })
 
-// This will take the data and create the file..
+// Create File..
 app.post('/create', (req, res) => {
     fs.writeFile(`./files/${req.body.title.split(' ').join('')}`, req.body.description, function(err){  // path, fileName(title), body, callback for error
         res.redirect('/');
     })
 })
 
-// This will show open the file..
+// View File..
 app.get("/file/:filename", function(req, res){
     fs.readFile(`./files/${req.params.filename}`, "utf-8", function(err, fileData){
         res.render("show", {filename: req.params.filename, fileData: fileData})
     })
 })
 
-// This will delete the file..
+// Delete File.
 app.get("/deleteFile/:filename", function(req, res){
     fs.unlink(`./files/${req.params.filename}`, function(err){
         if(err){
@@ -49,6 +49,24 @@ app.get("/deleteFile/:filename", function(req, res){
     })
 })
 
-// This will save the file like file..
+// Saving favorite File..
+app.get('/savedFile/:filename', (req, res) => {
+    const sourcePath = path.join(__dirname, "files", req.params.filename);
+    const destPath = path.join(__dirname, "savedFiles", req.params.filename);
 
+    // checking if file available..
+    fs.access(sourcePath, fs.constants.F_OK, (err) => {
+        if(err){
+            res.send("File NOT Found");
+        }
+        // copy the file..
+        fs.copyFile(sourcePath, destPath, (err) => {
+            if(err){
+                console.error("Error copying file: ", err);
+                return res.send("Error saving the file to Favorite..");
+            }
+            res.redirect("/");
+        })
+    })
+})
 app.listen(3000);
