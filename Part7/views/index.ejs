@@ -18,25 +18,58 @@
             </form>
         </div>
         <!-- Cards -->
-        <h1 class="font-bold text-xl">Your saved cards</h1>
+        <h1 class="font-bold text-xl">Your Notes</h1>
         <div class="flex gap-3 flex-wrap p-3 rounded-lg items-center justify-center">
             <% if (files.length > 0) { %>
                 <% files.forEach(function(val) { %>
-                    <div class="border-2 border-gray-500 rounded-lg p-3 flex items-center gap-3">
+                    <div class="border-2 border-gray-500 rounded-lg p-3 flex items-center gap-5">
                         <div>
-                            <p class="font-bold text-lg"><%= val %></p>
-                            <a href="/file/<%=val %>" class="text-blue-500 font-semibold">Read More</a>
+                            <p class="font-bold text-lg"><%= val.title%></p>
+                            <a href="/file/<%=val.title %>" class="text-blue-500 font-semibold">Read More</a>
                         </div>
                         <div class="flex gap-2">
-                            <a href="/deleteFile/<%= val %>" class="hover:scale-120 hover:cursor-pointer transition-all duration-200">🗑️</a>
-                            <a href="/savedFile/<%= val %>" class="hover:scale-120 hover:cursor-pointer transition-all duration-200">❤</a>
+                            <a href="/deleteFile/<%= val.title %>" class="hover:scale-120 hover:cursor-pointer transition-all duration-200">
+                                    <section class="flex justify-center items-center">
+                                    <button
+                                        href="/deleteFile/<%= val.title %>"
+                                        class="group flex justify-center p-2 rounded-md drop-shadow-xl from-gray-800 bg-[#316FF6] text-white font-semibold hover:translate-y-3 hover:rounded-[50%] 
+                                        transition-all duration-500 hover:from-[#331029] hover:to-[#310413] hover:cursor-pointer
+                                        hover:bg-red-500"
+                                    >
+                                        🗑️
+                                        <span
+                                        class="absolute opacity-0 group-hover:opacity-100 group-hover:text-red-500 group-hover:text-sm group-hover:-translate-y-10 duration-700 font-semibold"
+                                        >
+                                        Delete
+                                        </span>
+                                    </button>
+                                    </section>
+                                </a>
+                            <a href="/savedFile/<%= val.title %>" class="hover:scale-120 hover:cursor-pointer transition-all duration-200">
+                                    <section class="flex justify-center items-center">
+                                    <button
+                                        href="/savedFile/<%= val.title %>"
+                                        class="group flex justify-center p-2 rounded-md drop-shadow-xl from-gray-800 bg-[#316FF6] text-white font-semibold hover:translate-y-3 hover:rounded-[50%] 
+                                        transition-all duration-500 hover:from-[#331029] hover:to-[#310413] hover:cursor-pointer
+                                        hover:bg-red-500"
+                                    >
+                                        ❤
+                                        <span
+                                        class="absolute opacity-0 group-hover:opacity-100 group-hover:text-red-500 group-hover:text-sm group-hover:-translate-y-10 duration-700 font-semibold"
+                                        >
+                                        Favourite
+                                        </span>
+                                    </button>
+                                    </section>
+                                </a>
                         </div>
                     </div>
                 <% }); %>
             <% } else { %>
-                <h1 class="text-gray-600 font-bold text-xl">No tasks</h1>
+                <h1 class="text-gray-600 font-bold text-xl">NO Notes</h1>
             <% } %>
         </div>
+        <a href="/savedFiles" class="font-bold text-xl border-2 border-gray-500 p-2 rounded-xl">Your Favourite Notes</a>
     </div>
     <script src="/javascript/myScripts.js"></script>
 </body>
