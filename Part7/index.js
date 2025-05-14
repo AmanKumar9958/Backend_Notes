@@ -102,4 +102,15 @@ app.get('/savedFiles/:filename', function(req, res){
     })
 })
 
+// Edit File name..
+app.get('/edit/:filename', function(req, res){
+    res.render("edit", {filename: req.params.filename})
+})
+
+app.post('/edit', function(req, res){
+    fs.rename(`./files/${req.body.prevName}`, `./files/${req.body.newName}`, function(err){
+        res.redirect('/');
+    });
+})
+
 app.listen(3000);
