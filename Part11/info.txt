@@ -1,0 +1,18 @@
+In this lecture we will learn about CRUD operations with MongoDB.
+
+ORM: Object Relational Mapping
+ODM: Object Document Mapping
+
+MongoDB is a asynchronous code, means synchronous code will execute before asynchronous code
+ex:
+    userModel.create({
+        name: "Aman Kumar",
+        age: 20,
+        email: "amancollege04@gmail.com"
+    })
+
+    console.log("Aman");
+
+    console code will execute first then userModel.create() code will execute
+
+To fix this we will async and await
