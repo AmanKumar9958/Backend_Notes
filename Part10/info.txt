@@ -1,0 +1,18 @@
+In this video we will learn about databases.
+
+SQL -> Data stored in the form of Tables (rows and columns)
+NoSQL -> Data stored in te form of objects, ex:{
+    name: "Aman Kumar",
+    age: 20
+}
+
+MongoDB -> NoSQL
+
+in MongoDB:
+Database -> Model -> Document
+
+CODE                Database
+------------------------------
+mongoose.connect -> Database create
+model create     -> collection
+create user      -> document
