@@ -14,12 +14,14 @@ app.get("/", (req, res) => {
 });
 
 app.post("/create", (req, res) => {
-    let { name, username, password, confirmPassword } = req.body;
+    let { name, username, password, confirmPassword, image } = req.body;
+    console.log("Received form data:", req.body);
     userModel.create({
         name,
         username,
         password,
-        confirmPassword
+        confirmPassword,
+        image,
     })
     res.redirect('/read');
 })
@@ -40,8 +42,8 @@ app.get("/update/:id", async (req, res) => {
 })
 
 app.post("/edit/:userId", async (req, res) => {
-    let {name} = req.body;
-    let user = await userModel.findOneAndUpdate({_id: req.params.userId}, {name}, {new:true  })
+    let {newName} = req.body;
+    let user = await userModel.findOneAndUpdate({_id: req.params.userId}, {name: newName}, {new:true  })
     res.redirect('/read');
 })
 
