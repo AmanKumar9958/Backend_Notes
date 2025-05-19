@@ -15,7 +15,6 @@ app.get("/", (req, res) => {
 
 app.post("/create", (req, res) => {
     let { name, username, password, confirmPassword, image } = req.body;
-    console.log("Received form data:", req.body);
     userModel.create({
         name,
         username,

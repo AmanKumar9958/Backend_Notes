@@ -1,0 +1,13 @@
+In this lecture we will study about authentication & authorization
+
+Validating user: authentication
+Permit to do work: Authorization
+
+Topics to learn:
+    1. Setting cookies
+    2. Password encryption using Bcrypt
+    3. JWT
+
+Install some Packages:
+    1. jsonwebtoken
+    2. Bcrypt
