@@ -9,5 +9,6 @@ Topics to learn:
     3. JWT
 
 Install some Packages:
-    1. jsonwebtoken
+    1. cookie-parser
     2. Bcrypt
+    3. jsonwebtoken
