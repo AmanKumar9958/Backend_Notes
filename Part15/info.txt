@@ -1,0 +1,11 @@
+In this lecture we will study more about authentication and authorization.
+
+in this part we will do the following this:
+Create user account:
+    mongoose
+    scheme
+    model
+    userCreate -> password -> hash
+    jwt token -> cookie set
+
+login -> token -> decrypt -> email
