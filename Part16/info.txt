@@ -1,0 +1,1 @@
+In this lecture we will study about Data Association in MongoDB.
