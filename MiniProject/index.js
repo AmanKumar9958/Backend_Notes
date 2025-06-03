@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
 const userModel = require('./models/user');
+const postModel = require('./models/post');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // to render pages using EJS..
 app.set('view engine', 'ejs');
@@ -23,6 +25,35 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
+// login page route..
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+
+// Home page route..
+app.get('/home', async(req, res) => {
+    // Check if the user is authenticated by verifying the JWT token..
+    let token = req.cookies.token;
+    if(!token){
+        return res.redirect('/login');
+    }
+
+    try {
+        let decoded = jwt.verify(token, "secretKey");
+        let user = await userModel.findById(decoded.userid);
+        if(!user){
+            return res.redirect('/login');
+        }
+
+        // Fetch posts from the database..
+        let posts = await postModel.find({}).populate('userId');
+        res.render('home', { user, posts });
+    } catch (err) {
+        console.error(err);
+        res.redirect('/login');
+    }
+});
+
 // our register route..
 app.post('/register', async(req, res) => {
     // Check if the request body has all required fields..
@@ -32,7 +63,7 @@ app.post('/register', async(req, res) => {
     }
 
     // Check if user already exists..
-    let user = await userModel.fineOne({email});
+    let user = await userModel.findOne({email});
     if(user){
         return res.status(400).send('User already exists');
     }
@@ -51,6 +82,17 @@ app.post('/register', async(req, res) => {
                 password: hash,
                 age
             });
+
+            // Generate a JWT token for the user..
+            let token = jwt.sign({email: user.email, userid: user._id}, "secretKey");
+
+            // Send the token as a cookie in the response..
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: false, // Set to true if using HTTPS
+                maxAge: 24 * 60 * 60 * 1000 // 1 day
+            });
+            res.redirect("login");
         })
     })
 
@@ -58,6 +100,30 @@ app.post('/register', async(req, res) => {
 
 })
 
+// our login route..
+app.post('/login', async(req, res) => {
+    // Check if the request body has all required fields..
+    let { username, password } = req.body;
+    if(!username || !password){
+        return res.status(400).send('All fields are required');
+    }
+
+    // Check if user already exists..
+    let user = await userModel.findOne({username});
+    if(!user){
+        return res.status(400).send('Something went wrong');
+    }
+
+    // Compare the password with the hashed password in the database..
+    bcrypt.compare(password, user.password, (err, result) => {
+        if(result){
+            res.redirect('/home');
+        } else {
+            return res.status(400).send('Something went wrong');
+        }
+    })
+
+})
 
 // Our port..
 app.listen(3000, () => {
