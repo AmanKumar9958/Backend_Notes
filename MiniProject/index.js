@@ -21,17 +21,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // our home route..
-app.get('/', (req, res) => {
-    res.render('index');
-});
-
-// login page route..
-app.get('/login', (req, res) => {
-    res.render('login');
-});
-
-// Home page route..
-app.get('/home', async(req, res) => {
+app.get('/', async(req, res) => {
     // Check if the user is authenticated by verifying the JWT token..
     let token = req.cookies.token;
     if(!token){
@@ -44,14 +34,25 @@ app.get('/home', async(req, res) => {
         if(!user){
             return res.redirect('/login');
         }
-
-        // Fetch posts from the database..
-        let posts = await postModel.find({}).populate('userId');
-        res.render('home', { user, posts });
+        // Check if token cookie exists
+        const isLoggedIn = req.cookies.token ? true : false;
+        // Fetch all posts from the database..
+        const posts = await postModel.find().populate('user', 'username').sort({ createdAt: -1 });
+        res.render('home', {user, posts, isLoggedIn });
     } catch (err) {
         console.error(err);
         res.redirect('/login');
     }
+});
+
+// login page route..
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+
+// Register page route..
+app.get('/register', async(req, res) => {
+    res.render("register")
 });
 
 // our register route..
@@ -59,13 +60,13 @@ app.post('/register', async(req, res) => {
     // Check if the request body has all required fields..
     let { username, email, password, age } = req.body;
     if(!username || !email || !password || !age){
-        return res.status(400).send('All fields are required');
+        return res.redirect('/register?error=user_exists');
     }
 
     // Check if user already exists..
-    let user = await userModel.findOne({email});
+    let user = await userModel.findOne({ $or: [{email}, {username}] });
     if(user){
-        return res.status(400).send('User already exists');
+        return res.redirect('/register?error=user_exists');
     }
 
     // Hash the password before saving it to the database..
@@ -95,35 +96,46 @@ app.post('/register', async(req, res) => {
             res.redirect("login");
         })
     })
-
-
-
 })
 
 // our login route..
 app.post('/login', async(req, res) => {
     // Check if the request body has all required fields..
     let { username, password } = req.body;
-    if(!username || !password){
-        return res.status(400).send('All fields are required');
+    if (!username || !password) {
+        return res.redirect('/login?error=true');
     }
 
-    // Check if user already exists..
-    let user = await userModel.findOne({username});
-    if(!user){
-        return res.status(400).send('Something went wrong');
+    // Check if the user exists in the database..
+    let user = await userModel.findOne({ username });
+    if (!user) {
+        return res.redirect('/login?error=true');
     }
 
-    // Compare the password with the hashed password in the database..
+    // Compare the provided password with the hashed password in the database..
     bcrypt.compare(password, user.password, (err, result) => {
-        if(result){
-            res.redirect('/home');
+        if (result) {
+            let token = jwt.sign({ email: user.email, userid: user._id }, "secretKey");
+            // Send the token as a cookie in the response..
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: false, // Set to true if using HTTPS
+                maxAge: 24 * 60 * 60 * 1000 // 1 day
+            });
+            res.redirect('/');
         } else {
-            return res.status(400).send('Something went wrong');
+            return res.redirect('/login?error=true');
         }
-    })
+    });
+});
 
-})
+// our logout route..
+app.get('/logout', (req, res) => {
+    // Clear the token cookie to log out the user..
+    res.clearCookie('token');
+    res.redirect('/login');
+});
+
 
 // Our port..
 app.listen(3000, () => {
