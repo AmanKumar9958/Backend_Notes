@@ -136,6 +136,35 @@ app.get('/logout', (req, res) => {
     res.redirect('/login');
 });
 
+// Checking for protected routes..
+function isLoggedIn(req, res, next){
+    const token = req.cookies.token;
+    if(!token){
+        return res.redirect('/login');
+    }
+    try{
+        const data = jwt.verify(token, "secretKey");
+        req.user = data;
+        next();
+    } catch(err){
+        console.error(err);
+        return res.redirect('/login');
+    }
+}
+
+// Our profile page route..
+app.get('/profile', isLoggedIn, async(req, res) => {
+    // Fetch the user data from the database using the user ID from the JWT token..
+    let user = await userModel.findById(req.user.userid);
+    if(!user){
+        return res.redirect('/login');
+    }
+    res.render('profile', { user });
+});
+
+
+
+
 
 // Our port..
 app.listen(3000, () => {
