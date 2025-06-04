@@ -9,40 +9,7 @@
 </head>
 <body class="bg-gray-900 text-white font-sans">
     <!-- Navbar -->
-    <nav class="bg-gray-800 shadow-md sticky top-0 z-50 transition-all duration-500">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold text-blue-500 hover:scale-105 duration-300 cursor-pointer">
-                <i class="fa-solid fa-pen-to-square"></i> Postify
-            </div>
-            <ul class="hidden md:flex space-x-6 font-medium items-center">
-                <li><a href="/" class="hover:text-blue-400 transition duration-300">Home</a></li>
-                <li><a href="#" class="hover:text-blue-400 transition duration-300">About</a></li>
-                <li><a href="#" class="hover:text-blue-400 transition duration-300">Services</a></li>
-                <li><a href="#" class="hover:text-blue-400 transition duration-300">Contact</a></li>
-                <li class="relative group">
-                    <button class="flex items-center space-x-2 text-white focus:outline-none hover:text-blue-400 transition duration-300">
-                        <span class="hover:cursor-pointer"><%= user.username %></span>
-                        <i class="fa-solid fa-chevron-down text-sm mt-1"></i>
-                    </button>
-                    <!-- Dropdown Menu -->
-                    <ul class="absolute right-0 mt-2 w-40 bg-gray-800 shadow-lg rounded-lg py-2 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition duration-200 transform origin-top-right z-50">
-                        <li>
-                            <a href="/profile" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 transition">👤 Profile</a>
-                        </li>
-                        <li>
-                            <a href="/settings" class="block px-4 py-2 text-sm text-white hover:bg-gray-700 transition">⚙️ Settings</a>
-                        </li>
-                        <li>
-                            <a href="/logout" class="block px-4 py-2 text-sm text-red-500 hover:bg-red-500 hover:text-white transition">🚪 Logout</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <button class="md:hidden text-white focus:outline-none">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-        </div>
-    </nav>
+    <%- include('partials/navbar', { user: user }) %>
 
     <!-- Profile Section -->
     <section class="flex items-center justify-center min-h-[60vh] py-12 px-6 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
@@ -62,6 +29,10 @@
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-cake-candles text-blue-400"></i>
                     <span class="text-gray-300">Age: <%= user.age %></span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-pen-to-square text-blue-400"></i>
+                    <span class="text-gray-300">Posts: <%= posts %></span>
                 </div>
             </div>
             <div class="flex justify-center mt-6">

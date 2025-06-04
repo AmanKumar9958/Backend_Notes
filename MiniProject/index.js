@@ -93,7 +93,7 @@ app.post('/register', async(req, res) => {
                 secure: false, // Set to true if using HTTPS
                 maxAge: 24 * 60 * 60 * 1000 // 1 day
             });
-            res.redirect("login");
+            res.redirect("/login");
         })
     })
 })
@@ -122,7 +122,7 @@ app.post('/login', async(req, res) => {
                 secure: false, // Set to true if using HTTPS
                 maxAge: 24 * 60 * 60 * 1000 // 1 day
             });
-            res.redirect('/');
+            res.redirect('/profile');
         } else {
             return res.redirect('/login?error=true');
         }
@@ -159,7 +159,16 @@ app.get('/profile', isLoggedIn, async(req, res) => {
     if(!user){
         return res.redirect('/login');
     }
-    res.render('profile', { user });
+    const posts = await postModel.find().populate('user', 'username').sort({ createdAt: -1 });
+    res.render('profile', { user, posts });
+});
+
+// All Posts page route..
+app.get('/posts', isLoggedIn, async(req, res) => {
+    // Fetch all posts from the database..
+    const posts = await postModel.find().populate('user', 'username').sort({ createdAt: -1 });
+    const user = await userModel.findById(req.user.userid);
+    res.render('posts', { posts, user });
 });
 
 
