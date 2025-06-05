@@ -171,8 +171,19 @@ app.get('/posts', isLoggedIn, async(req, res) => {
     res.render('posts', { posts, user });
 });
 
-
-
+// Create Post route..
+app.post('/create-post', isLoggedIn, async(req, res) => {
+    let { title, content } = req.body;
+    let user = await userModel.findOne({email: req.user.email});
+    let post = await postModel.create({
+        user: user._id,
+        title,
+        content
+    })
+    user.posts.push(post._id);
+    await user.save();
+    res.redirect('/posts')
+})
 
 
 // Our port..
