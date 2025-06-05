@@ -159,7 +159,8 @@ app.get('/profile', isLoggedIn, async(req, res) => {
     if(!user){
         return res.redirect('/login');
     }
-    const posts = await postModel.find().populate('user', 'username').sort({ createdAt: -1 });
+    // Fetch only posts created by the logged-in user
+    const posts = await postModel.find({ user: user._id }).populate('user', 'username').sort({ createdAt: -1 });
     res.render('profile', { user, posts });
 });
 
