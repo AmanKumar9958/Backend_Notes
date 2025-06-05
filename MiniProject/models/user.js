@@ -25,6 +25,12 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Post'
     }],
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    otp: String,
+    otpExpiresAt: Date
 });
 
 

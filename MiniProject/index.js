@@ -6,6 +6,10 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
+// for otp..
+const sendOTP = require('./OTP/sendOTP');
 
 // to render pages using EJS..
 app.set('view engine', 'ejs');
@@ -38,7 +42,7 @@ app.get('/', async(req, res) => {
         const isLoggedIn = req.cookies.token ? true : false;
         // Fetch all posts from the database..
         const posts = await postModel.find().populate('user', 'username').sort({ createdAt: -1 });
-        res.render('home', {user, posts, isLoggedIn });
+        res.render('home', {user, posts, isLoggedIn, req });
     } catch (err) {
         console.error(err);
         res.redirect('/login');
@@ -76,12 +80,26 @@ app.post('/register', async(req, res) => {
                 return res.status(500).send('Error hashing password');
             }
 
+            // Generate a OTP and set its expiration time..
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+            const otpExpiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes validity
+
+            // Send the OTP to the user's email..
+            try {
+                await sendOTP(email, otp);
+            } catch (error) {
+                console.error('Error sending OTP:', error);
+                return res.status(500).send('Error sending OTP');
+            }
+            
             // Create a new user instance..
             let user = await userModel.create({
                 username,
                 email,
                 password: hash,
-                age
+                age,
+                otp,
+                otpExpiresAt
             });
 
             // Generate a JWT token for the user..
@@ -93,10 +111,44 @@ app.post('/register', async(req, res) => {
                 secure: false, // Set to true if using HTTPS
                 maxAge: 24 * 60 * 60 * 1000 // 1 day
             });
-            res.redirect("/login");
+            res.redirect(`/verifyOTP?email=${email}`);
         })
     })
 })
+
+// OTP verification page route..
+app.get('/verifyOTP', (req, res) => {
+    const { email } = req.query;
+    if (!email) {
+        return res.redirect('/register?error=missing_email');
+    }
+    res.render('verifyOTP', { email });
+});
+
+// OTP verification route..
+app.post('/verifyOTP', async(req, res) => {
+    const { email, otp } = req.body;
+
+    // Check if the request body has all required fields..
+    if (!email || !otp) {
+        return res.redirect(`/verifyOTP?email=${email}&error=missing_fields`);
+    }
+
+    // Find the user by email and check the OTP..
+    let user = await userModel.findOne({ email });
+    if (!user || user.otp !== otp || Date.now() > user.otpExpiresAt) {
+        return res.redirect(`/verifyOTP?email=${email}&error=invalid_otp`);
+    }
+
+    // OTP is valid, clear it and save the user..
+    user.otp = null;
+    user.otpExpiresAt = null;
+    user.isVerified = true; // Mark the user as verified
+    await user.save();
+
+    // Redirect to the profile page after successful verification..
+    res.redirect('/login');
+});
 
 // our login route..
 app.post('/login', async(req, res) => {
@@ -161,7 +213,7 @@ app.get('/profile', isLoggedIn, async(req, res) => {
     }
     // Fetch only posts created by the logged-in user
     const posts = await postModel.find({ user: user._id }).populate('user', 'username').sort({ createdAt: -1 });
-    res.render('profile', { user, posts });
+    res.render('profile', { user, posts, req });
 });
 
 // All Posts page route..
@@ -169,7 +221,7 @@ app.get('/posts', isLoggedIn, async(req, res) => {
     // Fetch all posts from the database..
     const posts = await postModel.find().populate('user', 'username').sort({ createdAt: -1 });
     const user = await userModel.findById(req.user.userid);
-    res.render('posts', { posts, user });
+    res.render('posts', { posts, user, req });
 });
 
 // Create Post route..
