@@ -20,12 +20,13 @@
             <input type="password" name="password" id="password" placeholder="Password" class="p-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required oninvalid="this.setCustomValidity('Please enter a password.')" oninput="this.setCustomValidity('')">
             <div class="w-full flex justify-center items-center gap-4">
                 <button type="submit" class="p-2 bg-blue-600 rounded-md hover:bg-blue-700 transition-colors hover:cursor-pointer">Login</button>
-                <script>
+                <a href="/register" class="p-2 bg-blue-600 rounded-md hover:bg-blue-700 transition-colors hover:cursor-pointer">New User?</a>
+                <!-- <script>
                     const urlPara = new URLSearchParams(window.location.search);
                     if (urlPara.get('error') === 'true') {
                         document.write('<a href="/register" class="p-2 bg-blue-600 rounded-md hover:bg-blue-700 transition-colors hover:cursor-pointer">Register</a>');
                     }
-                </script>
+                </script> -->
             </div>
         </form>
     </div>

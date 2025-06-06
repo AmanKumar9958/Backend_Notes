@@ -28,7 +28,11 @@
                 <div class="mt-10 text-gray-400">
                     <% posts.reverse().forEach(post => { %>
                         <div class="bg-gray-800 p-4 rounded-lg shadow mb-4 text-left">
-                            <p>@<%= post.user.username %></p>
+                            <% if (post.user) { %>
+                                <p>@<%= post.user.username %></p>
+                            <% } else { %>
+                                <p class="text-red-400 italic">[deleted user]</p>
+                            <% } %>
                             <h2 class="text-xl font-bold text-blue-400"><%= post.title %></h2>
                             <p class="text-gray-300"><%= post.content %></p>
                             <div class="flex justify-between items-center mt-4">
