@@ -26,27 +26,30 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // our home route..
 app.get('/', async(req, res) => {
-    // Check if the user is authenticated by verifying the JWT token..
-    let token = req.cookies.token;
-    if(!token){
-        return res.redirect('/login');
-    }
+    let user = null;
+    let isLoggedIn = false;
 
-    try {
-        let decoded = jwt.verify(token, "secretKey");
-        let user = await userModel.findById(decoded.userid);
-        if(!user){
+    // Check if the user is logged in by checking the token cookie..
+    const token = req.cookies.token;
+    if(token){
+        try{
+            const data = jwt.verify(token, "secretKey");
+            user = await userModel.findById(data.userid);
+            isLoggedIn = true;
+        } catch(err) {
+            console.error(err);
+            res.clearCookie('token'); // Clear the cookie if verification fails
             return res.redirect('/login');
         }
-        // Check if token cookie exists
-        const isLoggedIn = req.cookies.token ? true : false;
-        // Fetch all posts from the database..
-        const posts = await postModel.find().populate('user', 'username').sort({ createdAt: -1 });
-        res.render('home', {user, posts, isLoggedIn, req });
-    } catch (err) {
-        console.error(err);
-        res.redirect('/login');
     }
+    const posts = await postModel.find().populate('user', 'username').sort({ createdAt: -1 });
+
+    res.render('home', {
+        isLoggedIn,
+        user,
+        posts,
+        req
+    });
 });
 
 // login page route..
@@ -185,7 +188,7 @@ app.post('/login', async(req, res) => {
 app.get('/logout', (req, res) => {
     // Clear the token cookie to log out the user..
     res.clearCookie('token');
-    res.redirect('/login');
+    res.redirect('/');
 });
 
 // Checking for protected routes..
