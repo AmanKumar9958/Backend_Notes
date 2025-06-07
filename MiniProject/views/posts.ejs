@@ -19,7 +19,7 @@
 
             <% if (posts.length === 0) { %>
                 <div class="mt-10 p-6 bg-gray-800 rounded-lg shadow-lg animate-fadeInUp delay-200">
-                    <p class="text-lg text-gray-300 mb-4">You haven't created any posts yet.</p>
+                    <p class="text-lg text-gray-300 mb-4">There are no posts, be first..</p>
                     <a href="/" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-lg transition duration-300">
                         Back to Home
                     </a>
@@ -44,11 +44,25 @@
                             <!-- Like and Delete Section -->
                             <div class="flex justify-between items-center mt-4">
                                 <div class="text-red-500 text-sm flex items-center gap-1" onclick="event.stopPropagation();">
-                                    <i class="fa-solid fa-heart"></i>
-                                    <span>3232</span>
+                                    <% const hasLiked = post.likes.includes(user._id); %>
+                                    <% if (!hasLiked) { %>
+                                        <a href="/like/<%= post._id %>">
+                                            <i class="fa-regular fa-heart"></i>
+                                        </a>
+                                    <% } else { %>
+                                        <a href="/like/<%= post._id %>">
+                                            <i class="fa-solid fa-heart" style="color: #ff0000;"></i>
+                                        </a>
+                                    <% } %>
+                                    <span><%= post.likes.length %></span>
                                 </div>
-                                <div class="text-gray-400 hover:text-red-500 transition cursor-pointer" onclick="event.stopPropagation();">
-                                    <i class="fa-solid fa-trash"></i>
+                                <div class="flex items-center gap-3">
+                                    <div class="text-gray-400 hover:text-red-500 transition cursor-pointer" onclick="event.stopPropagation();">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </div>
+                                    <div class="text-gray-400 hover:text-blue-500 transition cursor-pointer" onclick="event.stopPropagation();">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
