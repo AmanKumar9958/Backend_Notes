@@ -269,6 +269,22 @@ app.get('/delete-post/:id', isLoggedIn, async(req, res) => {
     res.redirect('/posts');
 })
 
+// Route for deleting post for my posts page..
+app.get('/delete-my-post/:id', isLoggedIn, async(req, res) => {
+    // Check if the user is the owner of the post..
+    let post = await postModel.findOne({_id: req.params.id});
+    if(!post || post.user.toString() !== req.user.userid) {
+        return res.redirect('/posts?error=you_are_not_user');
+    }
+    // Delete the post from the database..
+    await postModel.deleteOne({_id: req.params.id});
+    // Remove the post reference from the user's posts array..
+    let user = await userModel.findById(req.user.userid);
+    user.posts = user.posts.filter(p => p.toString() !== req.params.id);
+    await user.save();
+    res.redirect('/myPosts');
+})
+
 // Route for showing the edit post page..
 app.get('/edit-post/:id', isLoggedIn, async(req, res) =>{
     let post = await postModel.findOne({_id: req.params.id});
@@ -296,6 +312,26 @@ app.post('/update-post/:id', isLoggedIn, async(req, res) => {
         return res.redirect('/posts?error=post_not_found');
     }
     res.redirect('/posts');
+})
+
+// Getting current user all posts route..
+app.get('/myPosts', async(req, res) => {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.redirect('/login');
+    }
+    try {
+        const data = jwt.verify(token, "secretKey");
+        const user = await userModel.findById(data.userid).populate('posts');
+        if (!user) {
+            return res.redirect('/login');
+        }
+        res.render('myPosts', { user, posts: user.posts, req });
+    } catch (err) {
+        console.error(err);
+        res.clearCookie('token'); // Clear the cookie if verification fails
+        return res.redirect('/login');
+    }
 })
 
 // Our port..
