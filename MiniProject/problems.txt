@@ -1,2 +1,7 @@
-User is created by token gets deleted
-    Login problem
+<a href="/delete-post/<%= post._id %>">
+    <i class="fa-solid fa-trash"></i>
+</a>
+
+<a href="/edit-post/<%= post._id %>">
+    <i class="fa-solid fa-pen-to-square"></i>
+</a>

@@ -10,10 +10,17 @@
     <div class="w-full min-h-screen bg-gray-800 text-white flex items-center justify-center flex-col gap-2">
         <form action="/login" method="post" class="flex flex-col gap-4 w-96 p-6 bg-gray-900 rounded-md shadow-lg border border-gray-700 transition-transform">
             <h1 class="text-2xl font-bold text-center">Login Your Account</h1>
+            <h2 class="text-lg font-bold text-center text-red-500" id="errorMsg">Invalid username or password!!</h2>
             <script>
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.get('error') === 'true') {
-                    document.write('<h2 class="text-lg font-bold text-center text-red-500">Invalid username or password!!</h2>');
+                    const errorMsg = document.getElementById('errorMsg');
+                    errorMsg.classList.remove('hidden');
+                    setTimeout(() => {
+                        errorMsg.classList.add('hidden');
+                    }, 3000);
+                } else {
+                    document.getElementById('errorMsg').classList.add('hidden');
                 }
             </script>
             <input type="text" name="username" id="username" placeholder="Username" class="p-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" required autofocus oninvalid="this.setCustomValidity('Please enter a username.')" oninput="this.setCustomValidity('')">

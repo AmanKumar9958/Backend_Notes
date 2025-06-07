@@ -10,10 +10,17 @@
     <div class="w-full min-h-screen bg-gray-800 text-white flex items-center justify-center flex-col gap-2">
         <form action="/register" method="post" class="flex flex-col gap-4 w-96 p-6 bg-gray-900 rounded-md shadow-lg border border-gray-700 transition-transform">
             <h1 class="text-2xl font-bold text-center">Create User Account</h1>
+            <h2 class="text-lg font-bold text-center text-red-500">User already exists</h2>
             <script>
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.get('error') === 'user_exists') {
-                    document.write('<h2 class="text-lg font-bold text-center text-red-500">User already exists</h2>');
+                    const errorMsg = document.querySelector('h2');
+                    errorMsg.classList.remove('hidden');
+                    setTimeout(() => {
+                        errorMsg.classList.add('hidden');
+                    }, 3000);
+                } else {
+                    document.querySelector('h2').classList.add('hidden');
                 }
             </script>
             <input type="text" name="username" id="username" placeholder="Username" class="p-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" required autofocus oninvalid="this.setCustomValidity('Please enter a username.')" oninput="this.setCustomValidity('')">

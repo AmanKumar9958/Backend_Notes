@@ -25,6 +25,29 @@
                     </a>
                 </div>
             <% } else { %>
+                <h2 class="text-lg font-bold text-center text-red-500 hidden" id="errorMsg">Your are not User</h2>
+                    <script>
+                        const urlParams = new URLSearchParams(window.location.search);
+                        if (urlParams.get('error') === 'not_authorized') {
+                            const errorMsg = document.getElementById('errorMsg');
+                            errorMsg.classList.remove('hidden');
+
+                            setTimeout(() => {
+                                errorMsg.classList.add('hidden');
+                            }, 3000);
+                        }
+                    </script>
+                    <script>
+                        const urlPara = new URLSearchParams(window.location.search);
+                        if (urlPara.get('error') === 'you_are_not_user') {
+                            const errorMsg = document.getElementById('errorMsg');
+                            errorMsg.classList.remove('hidden');
+
+                            setTimeout(() => {
+                                errorMsg.classList.add('hidden');
+                            }, 3000);
+                        }
+                    </script>
                 <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     <% posts.reverse().forEach(post => { %>
                         <div 
@@ -56,14 +79,20 @@
                                     <% } %>
                                     <span><%= post.likes.length %></span>
                                 </div>
-                                <div class="flex items-center gap-3">
-                                    <div class="text-gray-400 hover:text-red-500 transition cursor-pointer" onclick="event.stopPropagation();">
-                                        <i class="fa-solid fa-trash"></i>
+                                <% if(post.user && post.user._id.toString() === user._id.toString()){ %>
+                                    <div class="flex items-center gap-3">
+                                        <div class="text-gray-400 hover:text-red-500 transition cursor-pointer" onclick="event.stopPropagation();">
+                                            <a href="/delete-post/<%= post._id %>">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </div>
+                                        <div class="text-gray-400 hover:text-blue-500 transition cursor-pointer" onclick="event.stopPropagation();">
+                                            <a href="/edit-post/<%= post._id %>">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="text-gray-400 hover:text-blue-500 transition cursor-pointer" onclick="event.stopPropagation();">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </div>
-                                </div>
+                                <% } %>
                             </div>
                         </div>
                     <% }) %>

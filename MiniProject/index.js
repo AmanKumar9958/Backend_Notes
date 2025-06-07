@@ -241,6 +241,7 @@ app.post('/create-post', isLoggedIn, async(req, res) => {
     res.redirect('/posts')
 })
 
+// Route for like/unlike..
 app.get('/like/:id', isLoggedIn, async(req, res) => {
     let post = await postModel.findOne({_id: req.params.id}).populate("user");
     if(post.likes.indexOf(req.user.userid) === -1){
@@ -249,6 +250,51 @@ app.get('/like/:id', isLoggedIn, async(req, res) => {
         post.likes.splice(post.likes.indexOf(req.user.userid), 1);
     }
     await post.save();
+    res.redirect('/posts');
+})
+
+// Route for deleting a post..
+app.get('/delete-post/:id', isLoggedIn, async(req, res) => {
+    // Check if the user is the owner of the post..
+    let post = await postModel.findOne({_id: req.params.id});
+    if(!post || post.user.toString() !== req.user.userid) {
+        return res.redirect('/posts?error=you_are_not_user');
+    }
+    // Delete the post from the database..
+    await postModel.deleteOne({_id: req.params.id});
+    // Remove the post reference from the user's posts array..
+    let user = await userModel.findById(req.user.userid);
+    user.posts = user.posts.filter(p => p.toString() !== req.params.id);
+    await user.save();
+    res.redirect('/posts');
+})
+
+// Route for showing the edit post page..
+app.get('/edit-post/:id', isLoggedIn, async(req, res) =>{
+    let post = await postModel.findOne({_id: req.params.id});
+    if(!post){
+        return res.redirect('/posts?error=post_not_found');
+    } else{
+        res.render('editPost', { post, req });
+    }
+})
+
+// Route for updating a post..
+app.post('/update-post/:id', isLoggedIn, async(req, res) => {
+    // Check if the user is the owner of the post..
+    let posts = await postModel.findOne({_id: req.params.id});
+    if (!posts || posts.user.toString() !== req.user.userid) {
+        return res.redirect('/posts?error=not_authorized');
+    }
+    // Check if the request body has all required fields..
+    if (!req.body.content || !req.body.title) {
+        return res.redirect(`/edit-post/${req.params.id}?error=missing_fields`);
+    }
+    // Find the post by ID and update it with the new content and title..
+    let post = await postModel.findOneAndUpdate({_id: req.params.id}, {content: req.body.content, title: req.body.title}, {new: true});
+    if(!post){
+        return res.redirect('/posts?error=post_not_found');
+    }
     res.redirect('/posts');
 })
 
